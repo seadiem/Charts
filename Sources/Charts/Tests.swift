@@ -1,8 +1,8 @@
 import Foundation
 
-struct Testes {
+public struct Testes {
     
-    func testMasks() {
+    public func testMasks() {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         formatter.timeZone = TimeZone(secondsFromGMT: 0)
@@ -20,7 +20,7 @@ struct Testes {
         print(mask)
     }
     
-    func testInts() {
+    public func testInts() {
         print(1.distance(to: 4)) // 3
         print(4.distance(to: 1)) // -3
         
@@ -36,7 +36,7 @@ struct Testes {
         print(r == y) 
     }
     
-    func testDates() {
+    public func testDates() {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         formatter.timeZone = TimeZone(secondsFromGMT: 0)
@@ -71,7 +71,7 @@ struct Testes {
     }
     
 
-    func testChart() {
+    public func testChart() {
         
         var points = Set<Point>()
         
@@ -115,7 +115,7 @@ struct Testes {
         }
     }
     
-    func testSlider() {
+    public func testSlider() {
         
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
@@ -138,7 +138,7 @@ struct Testes {
         
     }
     
-    func chartExplore() {
+    public func chartExplore() {
         do {
             let charts = try File().parse()
             _  = charts[0]
@@ -146,7 +146,7 @@ struct Testes {
         }
     }
     
-    func testBitmap() {
+    public func testBitmap() {
         do {
             _ = try Bitmap()
         } catch {
