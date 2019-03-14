@@ -7,6 +7,7 @@ public struct Chart {
     private var selected: Range<Date>?
     private var slider: Slice<Slider>?
     private var maxy: Int
+    public var showDates = true
     
     public var bounds: (begin: Date, end: Date) {
         guard let graph = graphs.first else { return (Date(), Date()) }
@@ -60,7 +61,7 @@ extension Chart: Drawable {
         renderer.setColor(color: CGColor.black)
         renderer.setWidth(w: 1.0)
         
-        for graph in self.graphs {
+        graphsloop: for graph in self.graphs {
 
             
             let slice = graph[selected.first!..<selected.last!]
@@ -84,11 +85,21 @@ extension Chart: Drawable {
             
             
             var drawpoints = [CGPoint]()
+            var timelabels = [(label: Point.Label, index: Int)]()
+            var check = 0
+            let quallity = 5
+            
             for (index, point) in slice.enumerated() {
                 let y = CGFloat(point.value) * ky
                 let x = CGFloat(index) * kx
                 let cgpoint = CGPoint(x: x, y: y)
                 drawpoints.append(cgpoint)
+                
+                if check % quallity == 0 {
+                    timelabels.append((point.datelabel, index))
+                }
+                
+                check += 1
             }
             
             guard drawpoints.count > 0 else { continue }
@@ -100,6 +111,15 @@ extension Chart: Drawable {
                 renderer.drawPath(points: [first, second])
                 index += 1
             }
-        }
+            
+            
+            guard showDates == true else { continue graphsloop }
+            for tuple in timelabels {
+                let y: CGFloat = 0
+                let x: CGFloat = CGFloat(tuple.index) * kx
+                tuple.label.draw(at: CGPoint(x: x, y: y), in: renderer)
+            }
+            
+        } // end graphsloop
     }
 }

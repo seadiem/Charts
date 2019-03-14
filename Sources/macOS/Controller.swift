@@ -25,11 +25,8 @@ class WindowController: NSWindowController, NSWindowDelegate {
         sliderview = Canvas(frame: sliderrect)
         canvas.addSubview(sliderview)
         
-        let timehight: CGFloat = 20.0
-        _ = CGRect(x: 0, y: sliderhight, width: rect.size.width, height: timehight)
-        
         let offset: CGFloat = 10.0
-        let displayrect = CGRect(x: 0, y: sliderhight + timehight, width: rect.size.width, height: rect.size.height - sliderhight - timehight - offset)
+        let displayrect = CGRect(x: 0, y: sliderhight + offset, width: rect.size.width, height: rect.size.height - sliderhight  - offset * 2)
         display = Canvas(frame: displayrect)
         canvas.addSubview(display)
         
@@ -71,6 +68,7 @@ class WindowController: NSWindowController, NSWindowDelegate {
         resetslider.reset()
         previewchart.set(screen: sliderrect.size)
         previewchart.set(slider: resetslider.sliceSlider)
+        previewchart.showDates = false
         
         let bitmap = Bitmap(drawable: previewchart, in: sliderrect.size)
         

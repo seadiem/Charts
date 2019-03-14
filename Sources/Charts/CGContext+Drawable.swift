@@ -48,8 +48,10 @@ public extension CGContext {
     
     func draw(text: String, at point: CGPoint) {
         let lineText = NSMutableAttributedString(string: text)
-        let demofont = NSFont.init(name: "Georgia-Bold", size: 60)
-        lineText.addAttributes([NSAttributedString.Key.font : demofont!], range: NSMakeRange(0, lineText.length))
+        let demofont = NSFont.init(name: "Georgia-Bold", size: 8)
+        lineText.addAttributes([NSAttributedString.Key.font : demofont!,
+                                NSAttributedString.Key.foregroundColor: CGColor.white],
+                               range: NSMakeRange(0,lineText.length))
         let lineToDraw: CTLine = CTLineCreateWithAttributedString(lineText)
         setTextDrawingMode(.fill)
         textPosition = point
