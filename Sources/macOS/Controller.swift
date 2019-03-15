@@ -11,6 +11,8 @@ class WindowController: NSWindowController, NSWindowDelegate {
 
     
     init() {
+        
+        
         let rect = NSRect(x: 100, y: 100, width: 400, height: 300)
         let mask: NSWindow.StyleMask = [.resizable, .titled, .closable, .miniaturizable]
         let outwindow = NSWindow(contentRect: rect, styleMask: mask, backing: NSWindow.BackingStoreType.buffered, defer: false)
@@ -18,6 +20,22 @@ class WindowController: NSWindowController, NSWindowDelegate {
         outwindow.makeKeyAndOrderFront(outwindow)
         outwindow.isOpaque = false
         outwindow.titleVisibility = .visible
+        outwindow.title = "Charts"
+    
+        
+        let mainMenu = NSMenu()
+        let oneitem = NSMenuItem(title: "One", action: #selector(WindowController.pick), keyEquivalent: "O")
+        let twoitem = NSMenuItem(title: "Two", action: #selector(WindowController.pick), keyEquivalent: "T")
+        mainMenu.addItem(oneitem)
+        mainMenu.addItem(twoitem)
+        mainMenu.autoenablesItems = true
+        mainMenu.showsStateColumn = true
+        let fileMenu = NSMenu(title: "File")
+        fileMenu.addItem(withTitle: "Open", action: #selector(WindowController.pick), keyEquivalent: "O")
+        twoitem.submenu = fileMenu
+        NSApp.mainMenu = mainMenu
+        
+        
         canvas = Canvas(frame: CGRect(origin: CGPoint.zero, size: rect.size))
         
         let sliderhight: CGFloat = 50
@@ -57,6 +75,28 @@ class WindowController: NSWindowController, NSWindowDelegate {
         super.init(window: outwindow)
         window?.contentView?.addSubview(canvas)
         
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func windowWillClose(_ notification: Notification) {
+        NSApplication.shared.terminate(0)
+    }
+    
+    @objc func pick() {
+        let rect = CGRect(x: 100, y: 100, width: 500, height: 500)
+        let panel = NSOpenPanel(contentRect: rect, styleMask: .closable, backing: .buffered, defer: false)
+        panel.canChooseDirectories = false
+        panel.canChooseFiles = true
+        panel.message = "Please, select 'chart_data.json'"
+        panel.begin { result in
+            print(panel.url as Any)
+        }
+    }
+    
+    func start() {
         guard charts.isEmpty == false else { return }
         
         var workchart = charts[4]
@@ -78,15 +118,5 @@ class WindowController: NSWindowController, NSWindowDelegate {
             workchart.set(slider: self.slider.sliceSlider)
             self.display.setDrawables([workchart])
         }
-        
-    }
-    
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func windowWillClose(_ notification: Notification) {
-        NSApplication.shared.terminate(0)
     }
 }

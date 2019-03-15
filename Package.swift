@@ -10,7 +10,8 @@ let package = Package(
             name: "Charts",
             dependencies: []),
         .target(
-            name: "macOS",
-            dependencies: ["Charts"])
+            name: "ChartsApp",
+            dependencies: ["Charts"],
+            path: "Sources/macOS")
     ]
 )

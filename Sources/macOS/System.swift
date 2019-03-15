@@ -8,5 +8,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         windowcontroller.window?.delegate = windowcontroller
         windowcontroller.showWindow(self)
+        NSApp.activate(ignoringOtherApps: true)
     }
 }

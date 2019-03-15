@@ -102,7 +102,7 @@ extension Chart: Drawable {
                 check += 1
             }
             
-            guard drawpoints.count > 0 else { continue }
+            guard drawpoints.count > 0 else { continue graphsloop }
             renderer.move(to: CGPoint.zero)
             var index = 1
             while index < drawpoints.endIndex {
@@ -119,7 +119,9 @@ extension Chart: Drawable {
                 let x: CGFloat = CGFloat(tuple.index) * kx
                 tuple.label.draw(at: CGPoint(x: x, y: y), in: renderer)
             }
+           
             
         } // end graphsloop
+
     }
 }
