@@ -140,7 +140,8 @@ public struct Testes {
     
     public func chartExplore() {
         do {
-            let charts = try File().parse()
+            let url = try File().findFile()
+            let charts = try File().parse(url: url)
             _  = charts[0]
         } catch {
         }

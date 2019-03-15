@@ -65,7 +65,8 @@ class WindowController: NSWindowController, NSWindowDelegate {
         slider = Slider(width: Int(rect.size.width), height: Int(rect.size.height), begin: one, end: two)
         
         do {
-            let charts = try File().parse()
+            let url = try File().findFile()
+            let charts = try File().parse(url: url)
             self.charts = charts
         } catch let error {
             print(error)
@@ -75,6 +76,7 @@ class WindowController: NSWindowController, NSWindowDelegate {
         super.init(window: outwindow)
         window?.contentView?.addSubview(canvas)
         
+        start()
     }
     
     required init?(coder: NSCoder) {
@@ -92,7 +94,18 @@ class WindowController: NSWindowController, NSWindowDelegate {
         panel.canChooseFiles = true
         panel.message = "Please, select 'chart_data.json'"
         panel.begin { result in
-            print(panel.url as Any)
+            guard let url = panel.url else { return }
+            self.reload(with: url)
+        }
+    }
+    
+    func reload(with url: URL) {
+        do {
+            let charts = try File().parse(url: url)
+            self.charts = charts
+            start()
+        } catch let error {
+            print(error)
         }
     }
     
@@ -100,17 +113,17 @@ class WindowController: NSWindowController, NSWindowDelegate {
         guard charts.isEmpty == false else { return }
         
         var workchart = charts[4]
-        workchart.set(screen: displayrect.size)
+        workchart.set(screen: display.bounds.size)
         slider.set(bounds: workchart.bounds)
         
         var previewchart = workchart
         var resetslider = slider
         resetslider.reset()
-        previewchart.set(screen: sliderrect.size)
+        previewchart.set(screen: sliderview.bounds.size)
         previewchart.set(slider: resetslider.sliceSlider)
         previewchart.showDates = false
         
-        let bitmap = Bitmap(drawable: previewchart, in: sliderrect.size)
+        let bitmap = Bitmap(drawable: previewchart, in: sliderview.bounds.size)
         
         sliderview.mousedrug = { point in
             self.slider.input(x: Int(point.x))
@@ -118,5 +131,9 @@ class WindowController: NSWindowController, NSWindowDelegate {
             workchart.set(slider: self.slider.sliceSlider)
             self.display.setDrawables([workchart])
         }
+        
+        self.sliderview.setDrawables([bitmap, self.slider])
+        workchart.set(slider: self.slider.sliceSlider)
+        self.display.setDrawables([workchart])
     }
 }

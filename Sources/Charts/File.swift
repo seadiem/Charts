@@ -46,9 +46,8 @@ public struct File {
     
     public init() {}
     
-    public func parse() throws -> [Chart] {
+    public func parse(url: URL) throws -> [Chart] {
         
-        let url = try findFile()
         let data = try Data(contentsOf: url)
         let decoder = JSONDecoder()
         let automaticarray = try decoder.decode([WhatICouldDecode].self, from: data)
@@ -77,7 +76,7 @@ public struct File {
     }
     
     
-    func findFile() throws -> URL {
+    public func findFile() throws -> URL {
         
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]

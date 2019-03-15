@@ -1,4 +1,9 @@
 import Foundation
+#if os(macOS)
+import CoreGraphics
+#elseif os(iOS)
+import UIKit
+#endif
 
 public struct Chart {
     
@@ -57,8 +62,14 @@ extension Chart: Drawable {
         
 
         guard let selected = slider, selected.isEmpty == false else { return }
+    
+        #if os(macOS)
+        let color = CGColor.black
+        #elseif os(iOS)
+        let color = UIColor.black.cgColor
+        #endif
         
-        renderer.setColor(color: CGColor.black)
+        renderer.setColor(color: color)
         renderer.setWidth(w: 1.0)
         
         graphsloop: for graph in self.graphs {

@@ -1,4 +1,8 @@
 import Foundation
+import CoreGraphics
+#if os(iOS)
+import ImageIO
+#endif
 
 public struct Bitmap: Drawable {
     

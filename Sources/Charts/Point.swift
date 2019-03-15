@@ -1,4 +1,9 @@
+#if os(macOS)
 import Foundation
+import CoreGraphics
+#elseif os(iOS)
+import UIKit
+#endif
 
 struct Point: Equatable, Hashable, Comparable {
     
@@ -54,7 +59,14 @@ extension Point {
         static var formatter = makeFormatter()
         
         let label: String
+        
+        #if os(macOS)
         let back = CGColor(red: 213/255, green: 51/255, blue: 97/255, alpha: 1.0)
+        #elseif os(iOS)
+        let back = UIColor(red: 213/255, green: 51/255, blue: 97/255, alpha: 1.0).cgColor
+        #endif
+        
+        
         init(date: Date) {
             label = Label.formatter.string(from: date)
         }

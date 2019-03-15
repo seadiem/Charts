@@ -1,4 +1,8 @@
 import Foundation
+#if os(macOS)
+#elseif os(iOS)
+import UIKit
+#endif
 
 
 public struct Slider {
@@ -74,7 +78,12 @@ extension Slider: RandomAccessCollection {
 
 extension Slider: Drawable {
     public func draw(into renderer: Renderer) {
+        
+        #if os(macOS)
         let color = CGColor(red: 149/255, green: 98/2/255, blue: 57/2/255, alpha: 1.0)
+        #elseif os(iOS)
+        let color = UIColor(red: 149/255, green: 98/2/255, blue: 57/2/255, alpha: 1.0).cgColor
+        #endif
         renderer.setBlend(mode: .colorDodge)
         renderer.draw(color: color, in: selectRect)
     }
