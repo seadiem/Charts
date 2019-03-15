@@ -95,6 +95,12 @@ public struct File {
         
     }
     
+    public func findFileInRoot() -> URL {
+        let string = "./Resource/chart_data.json"
+        let url = URL(fileURLWithPath: string)
+        return url
+    }
+    
     func findFileDummyBitmap() throws -> URL {
         
         let fileManager = FileManager.default

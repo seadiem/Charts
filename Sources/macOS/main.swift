@@ -1,1 +1,3 @@
+import Charts
+
 App().run()

@@ -2,6 +2,8 @@ import Foundation
 
 public struct Testes {
     
+    public init() {}
+    
     public func testMasks() {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
@@ -151,6 +153,16 @@ public struct Testes {
         do {
             _ = try Bitmap()
         } catch {
+        }
+    }
+    
+    public func loadingFromRoot() {
+        let url = File().findFileInRoot()
+        do {
+            let item = try File().parse(url: url)
+            print(item.count)
+        } catch let error {
+            print(error)
         }
     }
     

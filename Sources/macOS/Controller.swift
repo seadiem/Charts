@@ -64,14 +64,28 @@ class WindowController: NSWindowController, NSWindowDelegate {
         
         slider = Slider(width: Int(rect.size.width), height: Int(rect.size.height), begin: one, end: two)
         
+        
+        let url = File().findFileInRoot()
         do {
-            let url = try File().findFile()
+
             let charts = try File().parse(url: url)
             self.charts = charts
-        } catch let error {
-            print(error)
-            charts = []
+
+        } catch {
+            
+            print("no file in root")
+            
+            do {
+                let url = try File().findFile()
+                let charts = try File().parse(url: url)
+                self.charts = charts
+            } catch let error {
+                print(error)
+                charts = []
+            }
+            
         }
+        
         
         super.init(window: outwindow)
         window?.contentView?.addSubview(canvas)
