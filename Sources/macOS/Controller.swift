@@ -65,9 +65,8 @@ class WindowController: NSWindowController, NSWindowDelegate {
         slider = Slider(width: Int(rect.size.width), height: Int(rect.size.height), begin: one, end: two)
         
         
-        let url = File().findFileInRoot()
         do {
-
+            let url = File().findFileInRoot()
             let charts = try File().parse(url: url)
             self.charts = charts
 

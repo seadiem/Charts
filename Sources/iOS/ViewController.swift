@@ -23,19 +23,20 @@ class ViewController: UIViewController {
         
         canvas = Canvas(frame: CGRect(origin: CGPoint.zero, size: rect.size))
         
-        let sliderhight: CGFloat = 50
-        let sliderrect = CGRect(x: 0, y: 0, width: rect.size.width, height: sliderhight)
-        sliderview = Canvas(frame: sliderrect)
-        canvas.addSubview(sliderview)
-        
+        let topoffset: CGFloat = 20.0
         let offset: CGFloat = 10.0
-        let displayrect = CGRect(x: 0, y: sliderhight + offset, width: rect.size.width, height: rect.size.height - sliderhight  - offset * 2)
+        let displayheight = rect.height / 2.2
+        let displayrect = CGRect(x: 0, y: topoffset, width: rect.size.width, height: displayheight)
         display = Canvas(frame: displayrect)
         canvas.addSubview(display)
         
+        let sliderhight: CGFloat = 50
+        let sliderrect = CGRect(x: 0, y: 0 + topoffset + displayheight + offset, width: rect.size.width, height: sliderhight)
+        sliderview = Canvas(frame: sliderrect)
+        canvas.addSubview(sliderview)
         
         display.backgroundColor = UIColor(red: 149/255/2, green: 98/255/2, blue: 57/255/2, alpha: 1.0)
-        sliderview.backgroundColor = UIColor(red: 149/255, green: 98/255, blue: 57/255, alpha: 1.0)
+        sliderview.backgroundColor = UIColor(red: 149/255/1.9, green: 98/255/1.9, blue: 57/255/1.9, alpha: 1.0)
         canvas.backgroundColor = UIColor(red: 149/255/1.8, green: 98/255/1.8, blue: 57/255/1.8, alpha: 1.0)
         
         let formatter = DateFormatter()
@@ -51,7 +52,7 @@ class ViewController: UIViewController {
         slider = Slider(width: Int(rect.size.width), height: Int(rect.size.height), begin: one, end: two)
         
         do {
-            let url = try File().findFile()
+            let url = File().findFileInBundle()
             let charts = try File().parse(url: url)
             self.charts = charts
         } catch let error {

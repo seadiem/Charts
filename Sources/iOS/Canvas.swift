@@ -59,6 +59,10 @@ class Canvas: UIView {
         guard let ctx = UIGraphicsGetCurrentContext(), let color = backgroundColor else { return }
         
         ctx.saveGState()
+        ctx.scaleBy(x: 1, y: -1)
+        ctx.translateBy(x: 0, y: -bounds.height)
+        
+        ctx.saveGState()
         ctx.setFillColor(color.cgColor)
         ctx.fill(canvas)
         ctx.restoreGState()
@@ -68,6 +72,8 @@ class Canvas: UIView {
             item.draw(into: ctx)
             ctx.restoreGState()
         }
+        
+        ctx.restoreGState()
         
     }
 }

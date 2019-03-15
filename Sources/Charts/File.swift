@@ -101,6 +101,14 @@ public struct File {
         return url
     }
     
+    #if os(iOS)
+    public func findFileInBundle() -> URL {
+        let string = Bundle.main.bundlePath + "/Resource/chart_data.json"
+        let url = URL(fileURLWithPath: string)
+        return url
+    }
+    #endif
+    
     func findFileDummyBitmap() throws -> URL {
         
         let fileManager = FileManager.default
