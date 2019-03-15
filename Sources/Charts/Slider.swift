@@ -27,7 +27,6 @@ public struct Slider {
         return self[selectX]
     }
     
-    
     public mutating func set(bounds: ((begin: Date, end: Date))) {
         self.dates = bounds.begin..<bounds.end
         kx = Double(width) / Double(dates.count)
@@ -35,19 +34,9 @@ public struct Slider {
     
     public mutating func input(x: Int) {
         guard x < width, x > 0 else { return }
-        
-        let workx = selectX
-        
-        let divide = Int(Double(selectX.count) / 3)
-        let seconfIndex = workx.startIndex + divide
-        let thirdindex = seconfIndex + divide
-        let two = workx[seconfIndex..<thirdindex]
-
         let range = selectX
         let middle = (range.upperBound - range.lowerBound) / 2 + range.lowerBound
-        if two.contains(x) {
-            print("drag")
-        } else if x < middle {
+        if x < middle {
             let temp = x..<range.upperBound
             guard temp.count > 20 else { return }
             selectX = temp
