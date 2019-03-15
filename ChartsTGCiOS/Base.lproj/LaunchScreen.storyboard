@@ -25,11 +25,11 @@
                                     <constraint firstAttribute="width" constant="61" id="yvs-aZ-5le"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" weight="ultraLight" pointSize="78"/>
-                                <color key="textColor" red="0.41355911726804129" green="0.23102852677645508" blue="0.19531115402913102" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="textColor" red="0.55112355025773196" green="0.36060202435378108" blue="0.21345073119271299" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="0.29615012886597936" green="0.16675243564724998" blue="0.14169910680768233" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.47977266422252063" green="0.31681913525864841" blue="0.18367090607885755" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="1O5-bM-AOu" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="VGW-vG-hon"/>
                             <constraint firstItem="1O5-bM-AOu" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="zOA-XJ-vTh"/>
