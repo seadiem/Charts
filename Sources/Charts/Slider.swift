@@ -36,9 +36,18 @@ public struct Slider {
     public mutating func input(x: Int) {
         guard x < width, x > 0 else { return }
         
+        let workx = selectX
+        
+        let divide = Int(Double(selectX.count) / 3)
+        let seconfIndex = workx.startIndex + divide
+        let thirdindex = seconfIndex + divide
+        let two = workx[seconfIndex..<thirdindex]
+
         let range = selectX
         let middle = (range.upperBound - range.lowerBound) / 2 + range.lowerBound
-        if x < middle {
+        if two.contains(x) {
+            print("drag")
+        } else if x < middle {
             let temp = x..<range.upperBound
             guard temp.count > 20 else { return }
             selectX = temp
