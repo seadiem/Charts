@@ -1,12 +1,13 @@
 import Foundation
 
-struct Graph: RandomAccessCollection, Hashable {
+struct Graph: RandomAccessCollection, Hashable, Selectable {
     
     let label: String
     private let points: Set<Point>
     private var arranged: [Point]
     private var hashtable: [Date: Point]
     let maxy: Int
+    public var select: Select
     
     init(points: Set<Point>, label: String) {
         self.points = points
@@ -16,6 +17,7 @@ struct Graph: RandomAccessCollection, Hashable {
         var dict = [Date: Point]()
         for point in points { dict[point.maskDate] = point }
         self.hashtable = dict
+        self.select = .free
     }
     
     var startIndex: Date {

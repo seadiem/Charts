@@ -5,7 +5,7 @@ import CoreGraphics
 import UIKit
 #endif
 
-public struct Chart {
+public struct Chart: Selectable {
     
     private let graphs: Set<Graph>
     private var screen = CGSize.zero
@@ -13,6 +13,7 @@ public struct Chart {
     private var slider: Slice<Slider>?
     private var maxy: Int
     public var showDates = true
+    public var select: Select
     
     public var bounds: (begin: Date, end: Date) {
         guard let graph = graphs.first else { return (Date(), Date()) }
@@ -49,6 +50,7 @@ public struct Chart {
         
         maxy = graphs.map { $0.maxy }.max() ?? 10
         
+        self.select = .free
     }
     
     public mutating func set(screen: CGSize) { self.screen = screen }

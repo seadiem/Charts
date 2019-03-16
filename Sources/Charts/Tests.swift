@@ -166,4 +166,20 @@ public struct Testes {
         }
     }
     
+    public func testSelect() {
+        do {
+            let url = try File().findFile()
+            var charts = try File().parse(url: url)
+            charts.selectOnly(at: 1)
+            charts.forEach { print("item status: \($0.select)") }
+            print("only at 3")
+            charts.selectAndResignOthers(at: 3)
+            charts.forEach { print("item status: \($0.select)") }
+            print("tap at 3")
+            charts.selectOnly(at: 3)
+            charts.forEach { print("item status: \($0.select)") }
+        } catch {
+        }
+    }
+    
 }

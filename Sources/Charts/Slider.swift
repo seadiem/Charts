@@ -26,7 +26,7 @@ public struct Slider {
         self.width = width
         self.height = height
         self.dates = begin..<end
-        selectX = 0..<width / 2
+        selectX = 0..<(width / 2)
         selectRect = CGRect(x: selectX.lowerBound, y: 0, width: selectX.count, height: height)
         kx = Double(width) / Double(dates.count)
         movement = .zero
@@ -94,7 +94,7 @@ public struct Slider {
     }
     
     public mutating func reset() {
-        selectX = 1..<width-1
+        selectX = 1..<(width - 1)
         selectRect = CGRect(x: selectX.lowerBound, y: 0, width: selectX.count, height: height)
     }
     
