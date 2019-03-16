@@ -52,10 +52,13 @@ public struct Chart: Selectable {
         
         self.select = .free
     }
-    
+    public var collectionItem: Item { return Item(chart: self) }
     public mutating func set(screen: CGSize) { self.screen = screen }
     public mutating func set(slider: Slice<Slider>) { self.slider = slider }
-
+    public mutating func reloadMaxY() {
+        let needsToDraw = graphs.filter { $0.select == .selected }
+        maxy = needsToDraw.map { $0.maxy }.max() ?? 10
+    }
 }
 
 extension Chart: Drawable {
@@ -74,7 +77,8 @@ extension Chart: Drawable {
         renderer.setColor(color: color)
         renderer.setWidth(w: 1.0)
         
-        graphsloop: for graph in self.graphs {
+        let needsToDraw = graphs.filter { $0.select == .selected }
+        graphsloop: for graph in needsToDraw {
 
             
             let slice = graph[selected.first!..<selected.last!]
@@ -135,6 +139,5 @@ extension Chart: Drawable {
            
             
         } // end graphsloop
-
     }
 }

@@ -20,6 +20,10 @@ struct Graph: RandomAccessCollection, Hashable, Selectable {
         self.select = .free
     }
     
+    public var collectionItem: Item {
+        return Item(graph: self)
+    }
+    
     var startIndex: Date {
         return arranged.first!.maskDate
     }
@@ -34,7 +38,6 @@ struct Graph: RandomAccessCollection, Hashable, Selectable {
         guard let point = hashtable[mask] else { fatalError("\(position) is out of bounds in Graph") }
         return point
     }
-    
     
 }
 
