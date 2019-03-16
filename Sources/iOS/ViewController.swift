@@ -97,11 +97,19 @@ class ViewController: UIViewController {
         
         let bitmap = Bitmap(drawable: previewchart, in: sliderview.bounds.size)
         
+        sliderview.mousedown = { point in
+            self.slider.touch(x: Int(point.x))
+        }
+        
         sliderview.mousedrug = { point in
             self.slider.input(x: Int(point.x))
             self.sliderview.setDrawables([bitmap, self.slider])
             workchart.set(slider: self.slider.sliceSlider)
             self.display.setDrawables([workchart])
+        }
+        
+        sliderview.mouseup = { _ in
+            self.slider.up()
         }
         
         self.sliderview.setDrawables([bitmap, self.slider])

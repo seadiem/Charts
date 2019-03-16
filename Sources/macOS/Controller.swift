@@ -71,9 +71,9 @@ class WindowController: NSWindowController, NSWindowDelegate {
             self.charts = charts
 
         } catch {
-            
+
             print("no file in root")
-            
+
             do {
                 let url = try File().findFile()
                 let charts = try File().parse(url: url)
@@ -82,9 +82,8 @@ class WindowController: NSWindowController, NSWindowDelegate {
                 print(error)
                 charts = []
             }
-            
+
         }
-        
         
         super.init(window: outwindow)
         window?.contentView?.addSubview(canvas)

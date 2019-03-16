@@ -63,20 +63,25 @@ public struct Slider {
     public mutating func input(x: Int) {
         guard x < width, x > 0 else { return }
         let range = selectX
-            
+        
         switch movement {
         case .drug(priorx: let priorx):
             movement = .drug(priorx: x)
             let delta = x - priorx
             let temp = (range.lowerBound + delta)..<(range.upperBound + delta)
+            guard temp.lowerBound > 0, temp.upperBound < width else { break }
             selectX = temp
         case .left:
+            guard x < range.upperBound else { break }
             let temp = x..<range.upperBound
-            guard temp.count > 20 else { return }
+            guard temp.count > 20 else { break }
+            guard temp.lowerBound > 0, temp.upperBound < width else { break }
             selectX = temp
         case .right:
+            guard x > range.lowerBound else { break }
             let temp = range.lowerBound..<x
-            guard temp.count > 20 else { return }
+            guard temp.count > 20 else { break }
+            guard temp.lowerBound > 0, temp.upperBound < width else { break }
             selectX = temp
         case .zero: break
         }
