@@ -7,12 +7,20 @@ import UIKit
 
 public struct Slider {
     
+    enum Movement {
+        case zero
+        case drug(priorx: Int)
+        case left
+        case right
+    }
+    
     let width: Int
     let height: Int
     var dates: Range<Date>
     var selectX: Range<Int>
     var selectRect: CGRect
     var kx: Double
+    var movement: Movement
     
     public init(width: Int, height: Int, begin: Date, end: Date) {
         self.width = width
@@ -21,6 +29,7 @@ public struct Slider {
         selectX = 0..<width / 2
         selectRect = CGRect(x: selectX.lowerBound, y: 0, width: selectX.count, height: height)
         kx = Double(width) / Double(dates.count)
+        movement = .zero
     }
     
     public var sliceSlider: Slice<Slider> {
@@ -32,21 +41,51 @@ public struct Slider {
         kx = Double(width) / Double(dates.count)
     }
     
+    public mutating func touch(x: Int) {
+        guard x < width, x > 0 else { return }
+        
+        let workx = selectX
+    
+        let seconfIndex = workx.startIndex.advanced(by: 10)
+        let thirdindex = workx.endIndex.advanced(by: -10)
+        let middleslice = workx[seconfIndex..<thirdindex]
+        let middle = (workx.upperBound - workx.lowerBound) / 2 + workx.lowerBound
+        
+        switch x {
+        case let x where middleslice.contains(x): movement = .drug(priorx: x)
+        case let x where (...middle).contains(x): movement = .left
+        case let x where (middle...).contains(x): movement = .right
+        default: break
+        }
+        
+    }
+    
     public mutating func input(x: Int) {
         guard x < width, x > 0 else { return }
         let range = selectX
-        let middle = (range.upperBound - range.lowerBound) / 2 + range.lowerBound
-        if x < middle {
+            
+        switch movement {
+        case .drug(priorx: let priorx):
+            movement = .drug(priorx: x)
+            let delta = x - priorx
+            let temp = (range.lowerBound + delta)..<(range.upperBound + delta)
+            selectX = temp
+        case .left:
             let temp = x..<range.upperBound
             guard temp.count > 20 else { return }
             selectX = temp
-        } else {
+        case .right:
             let temp = range.lowerBound..<x
             guard temp.count > 20 else { return }
             selectX = temp
+        case .zero: break
         }
         
         selectRect = CGRect(x: selectX.lowerBound, y: 0, width: selectX.count, height: height)
+    }
+    
+    public mutating func up() {
+        movement = .zero
     }
     
     public mutating func reset() {
