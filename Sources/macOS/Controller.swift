@@ -79,8 +79,11 @@ class WindowController: NSWindowController, NSWindowDelegate, NSCollectionViewDa
         scrollView.autoresizesSubviews = true
         canvas.addSubview(scrollView)
         
-        let detect = Detect(frame: collectionchartframe)
-        canvas.addSubview(detect)
+        let detectchart = Detect(frame: collectionchartframe)
+        canvas.addSubview(detectchart)
+        
+        let detectgraph = Detect(frame: collectiongraphframe)
+        canvas.addSubview(detectgraph)
         
     
         
@@ -138,13 +141,14 @@ class WindowController: NSWindowController, NSWindowDelegate, NSCollectionViewDa
         super.init(window: outwindow)
         window?.contentView?.addSubview(canvas)
        
-        detect.handler = detectInCharts
+        detectchart.handler = detectInCharts
+        detectgraph.handler = detectInGraphs
         
         collectionGraphs.dataSource = self
         collectionCharts.dataSource = self
         
         guard charts.isEmpty == false else { return }
-        charts.selectOnly(at: 3)
+        charts.selectOnly(at: 0)
         guard let selected = charts.firstSelected else { return }
         load(chart: selected)
     }
@@ -202,7 +206,11 @@ class WindowController: NSWindowController, NSWindowDelegate, NSCollectionViewDa
             var collectionitem = model.collectionItem
             collectionitem.set(size: CGSize(width: 48, height: 48))
             cell.set(drawables: [collectionitem])
-        case is CollectionGraphs: break
+        case is CollectionGraphs:
+            guard let chart = charts.firstSelected else { break }
+            var collectionitem = chart.itemgraph(at: indexPath.item)
+            collectionitem.set(size: CGSize(width: 24, height: 48))
+            cell.set(drawables: [collectionitem])
         default: break
         }
         
@@ -211,17 +219,29 @@ class WindowController: NSWindowController, NSWindowDelegate, NSCollectionViewDa
     }
     
     func detectInCharts(at x: Int) {
-        guard let index = detect(at: x) else { return }
+        guard let index = detect(at: x, count: charts.count) else { return }
         charts.selectAndResignOthers(at: index)
         guard let selected = charts.firstSelected else { return }
         load(chart: selected)
         collectionCharts.reloadData()
+        collectionGraphs.reloadData()
     }
     
-    func detect(at x: Int) -> Int? {
+    func detectInGraphs(at x: Int) {
+        guard let selected = charts.firstSelected else { return }
+        guard let smallindex = detect(at: x, count: selected.count) else { return }
+        guard var chart = charts.firstSelected else { return }
+        guard let bigindex = charts.firstIndex(of: chart) else { return }
+        chart.select(at: smallindex)
+        charts[bigindex] = chart
+        load(chart: chart)
+        collectionGraphs.reloadData()
+    }
+    
+    func detect(at x: Int, count: Int) -> Int? {
         let itemwidth = 48
         var coords: [Int: Range<Int>] = [:]
-        for item in 0..<charts.count {
+        for item in 0..<count {
             let range = (itemwidth * item)..<(itemwidth * (item + 1))
             coords[item] = range
         }

@@ -5,8 +5,8 @@ import CoreGraphics
 import UIKit
 #endif
 
-public struct Chart: Selectable {
-    
+public struct Chart: Selectable, Equatable, Hashable {
+
     private var graphs: Array<Graph>
     private var screen = CGSize.zero
     private var selected: Range<Date>?
@@ -21,7 +21,9 @@ public struct Chart: Selectable {
     }
     
     public var count: Int { return graphs.count }
-    subscript(index: Int) -> Graph { return graphs[index] }
+    public func itemgraph(at index: Int) -> Item {
+        return graphs[index].collectionItem
+    }
     
     public init(autamatic: File.WhatICouldDecode, manually: File.WhatIDecodeManually) {
         var xpos = [Int]()
@@ -65,6 +67,26 @@ public struct Chart: Selectable {
     mutating func reloadMaxY() {
         let needsToDraw = graphs.filter { $0.select == .selected }
         maxy = needsToDraw.map { $0.maxy }.max() ?? 10
+    }
+}
+
+extension Chart {
+    public static func == (lhs: Chart, rhs: Chart) -> Bool {
+        guard lhs.graphs.isEmpty == false, lhs.graphs.isEmpty == false else { return false }
+        return lhs.graphs[0] == rhs.graphs[0]
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        for item in graphs {
+            guard item.count > 2 else {
+                hasher.combine(maxy)
+                return
+            }
+            let prefix = item.prefix(2)
+            for item in prefix {
+                hasher.combine(item)
+            }
+        }
     }
 }
 
