@@ -1,3 +1,3 @@
 import Charts
 
-Testes().testSelect()
+App().run()

@@ -26,7 +26,7 @@ public struct Slider {
         self.width = width
         self.height = height
         self.dates = begin..<end
-        selectX = 0..<(width / 2)
+        selectX = 1..<(width / 2)
         selectRect = CGRect(x: selectX.lowerBound, y: 0, width: selectX.count, height: height)
         kx = Double(width) / Double(dates.count)
         movement = .zero
@@ -57,7 +57,6 @@ public struct Slider {
         case let x where (middle...).contains(x): movement = .right
         default: break
         }
-        
     }
     
     public mutating func input(x: Int) {

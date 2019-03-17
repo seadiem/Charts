@@ -7,7 +7,7 @@ import UIKit
 
 public struct Chart: Selectable {
     
-    private let graphs: Set<Graph>
+    private var graphs: Array<Graph>
     private var screen = CGSize.zero
     private var selected: Range<Date>?
     private var slider: Slice<Slider>?
@@ -19,6 +19,9 @@ public struct Chart: Selectable {
         guard let graph = graphs.first else { return (Date(), Date()) }
         return (graph.startIndex, graph.endIndex)
     }
+    
+    var count: Int { return graphs.count }
+    subscript(index: Int) -> Graph { return graphs[index] }
     
     public init(autamatic: File.WhatICouldDecode, manually: File.WhatIDecodeManually) {
         var xpos = [Int]()
@@ -32,7 +35,7 @@ public struct Chart: Selectable {
             }
         }
         
-        var graphs = Set<Graph>()
+        var graphs = Array<Graph>()
         
         for (name, numbers) in values {
             guard dates.indices == numbers.indices else { continue }
@@ -43,7 +46,7 @@ public struct Chart: Selectable {
                 points.insert(point)
             }
             let graph = Graph(points: points, label: name)
-            graphs.insert(graph)
+            graphs.append(graph)
         }
         
         self.graphs = graphs
@@ -55,7 +58,11 @@ public struct Chart: Selectable {
     public var collectionItem: Item { return Item(chart: self) }
     public mutating func set(screen: CGSize) { self.screen = screen }
     public mutating func set(slider: Slice<Slider>) { self.slider = slider }
-    public mutating func reloadMaxY() {
+    public mutating func select(at index: Int) {
+        graphs.selectOnly(at: index)
+        reloadMaxY()
+    }
+    mutating func reloadMaxY() {
         let needsToDraw = graphs.filter { $0.select == .selected }
         maxy = needsToDraw.map { $0.maxy }.max() ?? 10
     }

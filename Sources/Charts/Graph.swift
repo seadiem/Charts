@@ -17,7 +17,7 @@ struct Graph: RandomAccessCollection, Hashable, Selectable {
         var dict = [Date: Point]()
         for point in points { dict[point.maskDate] = point }
         self.hashtable = dict
-        self.select = .free
+        self.select = .selected
     }
     
     public var collectionItem: Item {

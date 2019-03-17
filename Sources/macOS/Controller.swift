@@ -8,12 +8,14 @@ class WindowController: NSWindowController, NSWindowDelegate {
     let canvas: Canvas
     let sliderview: Canvas
     let display: Canvas
+    let collectionGraphs: NSCollectionView
+    let collectionCharts: NSCollectionView
 
     
     init() {
         
         
-        let rect = NSRect(x: 100, y: 100, width: 400, height: 300)
+        let rect = NSRect(x: 100, y: 100, width: 400, height: 450)
         let mask: NSWindow.StyleMask = [.resizable, .titled, .closable, .miniaturizable]
         let outwindow = NSWindow(contentRect: rect, styleMask: mask, backing: NSWindow.BackingStoreType.buffered, defer: false)
         outwindow.backgroundColor = NSColor.brown
@@ -37,14 +39,29 @@ class WindowController: NSWindowController, NSWindowDelegate {
         
         
         canvas = Canvas(frame: CGRect(origin: CGPoint.zero, size: rect.size))
+        var currentheight: CGFloat = 0
+        
+        let grapshight: CGFloat = 50
+        let collectiongraphframe = CGRect(x: 0, y: 0, width: rect.width, height: grapshight)
+        collectionGraphs = NSCollectionView(frame: collectiongraphframe)
+        canvas.addSubview(collectionGraphs)
+        currentheight += grapshight
+
+        let chartshight: CGFloat = 50
+        let collectionchartframe = CGRect(x: 0, y: currentheight, width: rect.width, height: chartshight)
+        collectionCharts = NSCollectionView(frame: collectionchartframe)
+        canvas.addSubview(collectionCharts)
+        currentheight += chartshight
         
         let sliderhight: CGFloat = 50
-        let sliderrect = CGRect(x: 0, y: 0, width: rect.size.width, height: sliderhight)
+        let sliderrect = CGRect(x: 0, y: currentheight, width: rect.size.width, height: sliderhight)
         sliderview = Canvas(frame: sliderrect)
         canvas.addSubview(sliderview)
+        currentheight += sliderhight
         
-        let offset: CGFloat = 10.0
-        let displayrect = CGRect(x: 0, y: sliderhight + offset, width: rect.size.width, height: rect.size.height - sliderhight  - offset * 2)
+        let displayheight: CGFloat = 289
+        let offset: CGFloat = 1.0
+        let displayrect = CGRect(x: 0, y: currentheight + offset, width: rect.size.width, height: displayheight)
         display = Canvas(frame: displayrect)
         canvas.addSubview(display)
         
@@ -88,7 +105,7 @@ class WindowController: NSWindowController, NSWindowDelegate {
         super.init(window: outwindow)
         window?.contentView?.addSubview(canvas)
         
-        start()
+        load(at: 4)
     }
     
     required init?(coder: NSCoder) {
@@ -115,13 +132,13 @@ class WindowController: NSWindowController, NSWindowDelegate {
         do {
             let charts = try File().parse(url: url)
             self.charts = charts
-            start()
+            load(at: 4)
         } catch let error {
             print(error)
         }
     }
     
-    func start() {
+    func load(at index: Int) {
         guard charts.isEmpty == false else { return }
         
         var workchart = charts[4]
