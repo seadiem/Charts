@@ -14,5 +14,4 @@ class CollectionItem: NSCollectionViewItem {
         self.view = canvas
         self.view.wantsLayer = true
     }
-    
 }

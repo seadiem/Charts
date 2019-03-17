@@ -2,21 +2,21 @@ import AppKit
 import Charts
 
 @available(OSX 10.11, *)
-class WindowController: NSWindowController, NSWindowDelegate, NSCollectionViewDataSource, NSCollectionViewDelegateFlowLayout {
+class WindowController: NSWindowController, NSWindowDelegate, NSCollectionViewDataSource, NSCollectionViewDelegateFlowLayout, NSCollectionViewDelegate {
 
     var charts: [Chart]
     var slider: Slider
     let canvas: Canvas
     let sliderview: Canvas
     let display: Canvas
-//    let collectionGraphs: CollectionGraphs
+    let collectionGraphs: CollectionGraphs
     let collectionCharts: CollectionCharts
     
     
     init() {
         
         
-        let rect = NSRect(x: 100, y: 100, width: 400, height: 450)
+        let rect = NSRect(x: 100, y: 100, width: 400, height: 435)
         let mask: NSWindow.StyleMask = [.resizable, .titled, .closable, .miniaturizable]
         let outwindow = NSWindow(contentRect: rect, styleMask: mask, backing: NSWindow.BackingStoreType.buffered, defer: false)
         outwindow.backgroundColor = NSColor.brown
@@ -40,38 +40,49 @@ class WindowController: NSWindowController, NSWindowDelegate, NSCollectionViewDa
         
         
         canvas = Canvas(frame: CGRect(origin: CGPoint.zero, size: rect.size))
-        var currentheight: CGFloat = 0
+        var currentheight: CGFloat = 10
         
-        let layout = NSCollectionViewFlowLayout()
+        var layout = NSCollectionViewFlowLayout()
+        layout.minimumLineSpacing = 1
+        layout.minimumInteritemSpacing = 1
+        layout.scrollDirection = .horizontal
+        layout.itemSize = CGSize(width: 48, height: 24)
+        
+        
+        let grapshight: CGFloat = 25
+        let collectiongraphframe = CGRect(x: 0, y: currentheight, width: rect.width, height: grapshight)
+        collectionGraphs = CollectionGraphs()
+        collectionGraphs.collectionViewLayout = layout
+        collectionGraphs.backgroundColors = [NSColor(red: 50/1.1/255, green: 50/1.1/255, blue: 60/1.1/255, alpha: 1.0)]
+        collectionGraphs.register(CollectionItem.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "CollectionItem"))
+        currentheight += grapshight
+        var scrollView = NSScrollView(frame: collectiongraphframe)
+        scrollView.documentView = collectionGraphs
+        canvas.addSubview(scrollView)
+        
+        
+        layout = NSCollectionViewFlowLayout()
         layout.minimumLineSpacing = 1
         layout.minimumInteritemSpacing = 1
         layout.scrollDirection = .horizontal
         layout.itemSize = CGSize(width: 48, height: 48)
-        
-        
-        let grapshight: CGFloat = 50
-//        let collectiongraphframe = CGRect(x: 0, y: 0, width: rect.width, height: grapshight)
-//        collectionGraphs = CollectionGraphs(frame: collectiongraphframe)
-//        collectionGraphs.register(CollectionItem.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "CollectionItem"))
-//        canvas.addSubview(collectionGraphs)
-        currentheight += grapshight
-        
-        
-
         
         let chartshight: CGFloat = 50
         let collectionchartframe = CGRect(x: 0, y: currentheight, width: rect.width, height: chartshight)
         collectionCharts = CollectionCharts()
         collectionCharts.collectionViewLayout = layout
         collectionCharts.backgroundColors = [NSColor(red: 50/255, green: 50/255, blue: 60/255, alpha: 1.0)]
-        collectionCharts.autoresizingMask = [NSView.AutoresizingMask.width, NSView.AutoresizingMask.height]
-        collectionCharts.register(CollectionItem.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "CollectionItem") )
+        collectionCharts.register(CollectionItem.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "CollectionItem"))
         currentheight += chartshight
-        
-        
-        let scrollView = NSScrollView(frame: collectionchartframe)
+        scrollView = NSScrollView(frame: collectionchartframe)
         scrollView.documentView = collectionCharts
+        scrollView.autoresizesSubviews = true
         canvas.addSubview(scrollView)
+        
+        let detect = Detect(frame: collectionchartframe)
+        canvas.addSubview(detect)
+        
+    
         
         let sliderhight: CGFloat = 50
         let sliderrect = CGRect(x: 0, y: currentheight, width: rect.size.width, height: sliderhight)
@@ -126,8 +137,16 @@ class WindowController: NSWindowController, NSWindowDelegate, NSCollectionViewDa
         
         super.init(window: outwindow)
         window?.contentView?.addSubview(canvas)
-        self.collectionCharts.dataSource = self
-        load(at: 4)
+       
+        detect.handler = detectInCharts
+        
+        collectionGraphs.dataSource = self
+        collectionCharts.dataSource = self
+        
+        guard charts.isEmpty == false else { return }
+        charts.selectOnly(at: 0)
+        guard let selected = charts.firstSelected else { return }
+        load(chart: selected)
     }
     
     required init?(coder: NSCoder) {
@@ -138,6 +157,7 @@ class WindowController: NSWindowController, NSWindowDelegate, NSCollectionViewDa
     func windowWillClose(_ notification: Notification) {
         NSApplication.shared.terminate(0)
     }
+
     
     @objc func pick() {
         let rect = CGRect(x: 100, y: 100, width: 500, height: 500)
@@ -153,33 +173,70 @@ class WindowController: NSWindowController, NSWindowDelegate, NSCollectionViewDa
     
     func reload(with url: URL) {
         do {
-            let charts = try File().parse(url: url)
+            var charts = try File().parse(url: url)
             self.charts = charts
-            load(at: 4)
+            guard charts.isEmpty == false else { return }
+            charts.selectOnly(at: 0)
+            guard let selected = charts.firstSelected else { return }
+            load(chart: selected)
         } catch let error {
             print(error)
         }
     }
     
     func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
-        return charts.count
+        switch collectionView {
+        case is CollectionGraphs: return charts.firstSelected?.count ?? 0
+        case is CollectionCharts: return charts.count
+        default: return 0
+        }
     }
     
     func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
-        let cell = collectionView.makeItem( withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "CollectionItem"), for: indexPath) as! CollectionItem
-        let model = charts[indexPath.item]
-        var collectionitem = model.collectionItem
-        collectionitem.set(size: CGSize(width: 48, height: 48))
-        cell.set(drawables: [collectionitem])
+        
+        let cell = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "CollectionItem"), for: indexPath) as! CollectionItem
+
+        switch collectionView {
+        case is CollectionCharts:
+            let model = charts[indexPath.item]
+            var collectionitem = model.collectionItem
+            collectionitem.set(size: CGSize(width: 48, height: 48))
+            cell.set(drawables: [collectionitem])
+        case is CollectionGraphs: break
+        default: break
+        }
+        
         return cell
+        
     }
     
+    func detectInCharts(at x: Int) {
+        guard let index = detect(at: x) else { return }
+        print(index)
+        charts.selectAndResignOthers(at: index)
+        guard let selected = charts.firstSelected else { return }
+        load(chart: selected)
+    }
     
+    func detect(at x: Int) -> Int? {
+        let itemwidth = 48
+        var coords: [Int: Range<Int>] = [:]
+        for item in 0..<charts.count {
+            let range = (itemwidth * item)..<(itemwidth * (item + 1))
+            coords[item] = range
+        }
+        var index: Int?
+        for (i, value) in coords {
+            if value.contains(x) { index = i }
+        }
+        return index
+    }
     
-    func load(at index: Int) {
-        guard charts.isEmpty == false else { return }
+    func load(chart: Chart) {
         
-        var workchart = charts[4]
+        print("loading")
+        
+        var workchart = chart
         workchart.set(screen: display.bounds.size)
         slider.set(bounds: workchart.bounds)
         

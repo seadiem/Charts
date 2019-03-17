@@ -20,7 +20,7 @@ public struct Chart: Selectable {
         return (graph.startIndex, graph.endIndex)
     }
     
-    var count: Int { return graphs.count }
+    public var count: Int { return graphs.count }
     subscript(index: Int) -> Graph { return graphs[index] }
     
     public init(autamatic: File.WhatICouldDecode, manually: File.WhatIDecodeManually) {

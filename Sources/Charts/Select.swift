@@ -40,4 +40,8 @@ public extension MutableCollection where Element: Selectable {
         }
         selectOnly(at: index)
     }
+    
+    var firstSelected: Element? {
+        return self.first{ $0.select == .selected }
+    }
 }
