@@ -1,16 +1,17 @@
 import AppKit
 import Charts
 
-class WindowController: NSWindowController, NSWindowDelegate {
-    
+@available(OSX 10.11, *)
+class WindowController: NSWindowController, NSWindowDelegate, NSCollectionViewDataSource, NSCollectionViewDelegateFlowLayout {
+
     var charts: [Chart]
     var slider: Slider
     let canvas: Canvas
     let sliderview: Canvas
     let display: Canvas
-    let collectionGraphs: NSCollectionView
-    let collectionCharts: NSCollectionView
-
+//    let collectionGraphs: CollectionGraphs
+    let collectionCharts: CollectionCharts
+    
     
     init() {
         
@@ -41,17 +42,36 @@ class WindowController: NSWindowController, NSWindowDelegate {
         canvas = Canvas(frame: CGRect(origin: CGPoint.zero, size: rect.size))
         var currentheight: CGFloat = 0
         
+        let layout = NSCollectionViewFlowLayout()
+        layout.minimumLineSpacing = 1
+        layout.minimumInteritemSpacing = 1
+        layout.scrollDirection = .horizontal
+        layout.itemSize = CGSize(width: 48, height: 48)
+        
+        
         let grapshight: CGFloat = 50
-        let collectiongraphframe = CGRect(x: 0, y: 0, width: rect.width, height: grapshight)
-        collectionGraphs = NSCollectionView(frame: collectiongraphframe)
-        canvas.addSubview(collectionGraphs)
+//        let collectiongraphframe = CGRect(x: 0, y: 0, width: rect.width, height: grapshight)
+//        collectionGraphs = CollectionGraphs(frame: collectiongraphframe)
+//        collectionGraphs.register(CollectionItem.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "CollectionItem"))
+//        canvas.addSubview(collectionGraphs)
         currentheight += grapshight
+        
+        
 
+        
         let chartshight: CGFloat = 50
         let collectionchartframe = CGRect(x: 0, y: currentheight, width: rect.width, height: chartshight)
-        collectionCharts = NSCollectionView(frame: collectionchartframe)
-        canvas.addSubview(collectionCharts)
+        collectionCharts = CollectionCharts()
+        collectionCharts.collectionViewLayout = layout
+        collectionCharts.backgroundColors = [NSColor(red: 50/255, green: 50/255, blue: 60/255, alpha: 1.0)]
+        collectionCharts.autoresizingMask = [NSView.AutoresizingMask.width, NSView.AutoresizingMask.height]
+        collectionCharts.register(CollectionItem.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "CollectionItem") )
         currentheight += chartshight
+        
+        
+        let scrollView = NSScrollView(frame: collectionchartframe)
+        scrollView.documentView = collectionCharts
+        canvas.addSubview(scrollView)
         
         let sliderhight: CGFloat = 50
         let sliderrect = CGRect(x: 0, y: currentheight, width: rect.size.width, height: sliderhight)
@@ -64,6 +84,8 @@ class WindowController: NSWindowController, NSWindowDelegate {
         let displayrect = CGRect(x: 0, y: currentheight + offset, width: rect.size.width, height: displayheight)
         display = Canvas(frame: displayrect)
         canvas.addSubview(display)
+        
+        
         
         display.setBack(color:  CGColor(red: 149/255/2, green: 98/255/2, blue: 57/255/2, alpha: 1.0))
         sliderview.setBack(color:  CGColor(red: 149/255, green: 98/255, blue: 57/255, alpha: 1.0))
@@ -104,13 +126,14 @@ class WindowController: NSWindowController, NSWindowDelegate {
         
         super.init(window: outwindow)
         window?.contentView?.addSubview(canvas)
-        
+        self.collectionCharts.dataSource = self
         load(at: 4)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     
     func windowWillClose(_ notification: Notification) {
         NSApplication.shared.terminate(0)
@@ -137,6 +160,21 @@ class WindowController: NSWindowController, NSWindowDelegate {
             print(error)
         }
     }
+    
+    func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
+        return charts.count
+    }
+    
+    func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
+        let cell = collectionView.makeItem( withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "CollectionItem"), for: indexPath) as! CollectionItem
+        let model = charts[indexPath.item]
+        var collectionitem = model.collectionItem
+        collectionitem.set(size: CGSize(width: 48, height: 48))
+        cell.set(drawables: [collectionitem])
+        return cell
+    }
+    
+    
     
     func load(at index: Int) {
         guard charts.isEmpty == false else { return }

@@ -1,5 +1,6 @@
 import AppKit
 
+@available(OSX 10.11, *)
 class AppDelegate: NSObject, NSApplicationDelegate {
     
     

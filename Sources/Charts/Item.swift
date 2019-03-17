@@ -31,3 +31,4 @@ public struct Item: Drawable {
         renderer.draw(text: name, at: CGPoint.zero)
     }
 }
+
