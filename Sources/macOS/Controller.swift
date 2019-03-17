@@ -209,7 +209,7 @@ class WindowController: NSWindowController, NSWindowDelegate, NSCollectionViewDa
         case is CollectionGraphs:
             guard let chart = charts.firstSelected else { break }
             var collectionitem = chart.itemgraph(at: indexPath.item)
-            collectionitem.set(size: CGSize(width: 24, height: 48))
+            collectionitem.set(size: CGSize(width: 48, height: 24))
             cell.set(drawables: [collectionitem])
         default: break
         }
