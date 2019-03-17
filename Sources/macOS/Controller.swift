@@ -144,7 +144,7 @@ class WindowController: NSWindowController, NSWindowDelegate, NSCollectionViewDa
         collectionCharts.dataSource = self
         
         guard charts.isEmpty == false else { return }
-        charts.selectOnly(at: 0)
+        charts.selectOnly(at: 3)
         guard let selected = charts.firstSelected else { return }
         load(chart: selected)
     }
@@ -212,7 +212,6 @@ class WindowController: NSWindowController, NSWindowDelegate, NSCollectionViewDa
     
     func detectInCharts(at x: Int) {
         guard let index = detect(at: x) else { return }
-        print(index)
         charts.selectAndResignOthers(at: index)
         guard let selected = charts.firstSelected else { return }
         load(chart: selected)
@@ -233,8 +232,6 @@ class WindowController: NSWindowController, NSWindowDelegate, NSCollectionViewDa
     }
     
     func load(chart: Chart) {
-        
-        print("loading")
         
         var workchart = chart
         workchart.set(screen: display.bounds.size)

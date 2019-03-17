@@ -72,7 +72,6 @@ extension Chart: Drawable {
     
     public func draw(into renderer: Renderer) {
         
-
         guard let selected = slider, selected.isEmpty == false else { return }
     
         #if os(macOS)
@@ -87,27 +86,14 @@ extension Chart: Drawable {
         let needsToDraw = graphs.filter { $0.select == .selected }
         graphsloop: for graph in needsToDraw {
 
-            
             let slice = graph[selected.first!..<selected.last!]
             
             let kx: CGFloat
+            kx = screen.width / CGFloat(slice.count)
 
-            if CGFloat(slice.count) >= screen.width {
-                kx = CGFloat(slice.count) / screen.width
-            } else {
-                kx = screen.width / CGFloat(slice.count)
-            }
-
-            let workheight = screen.height
             let ky: CGFloat
+            ky = screen.height / CGFloat(maxy)
 
-            if CGFloat(maxy) <= workheight {
-                ky =  CGFloat(maxy) / workheight
-            } else {
-                ky = workheight / CGFloat(maxy)
-            }
-            
-            
             var drawpoints = [CGPoint]()
             var timelabels = [(label: Point.Label, index: Int)]()
             var check = 0
