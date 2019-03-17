@@ -215,6 +215,7 @@ class WindowController: NSWindowController, NSWindowDelegate, NSCollectionViewDa
         charts.selectAndResignOthers(at: index)
         guard let selected = charts.firstSelected else { return }
         load(chart: selected)
+        collectionCharts.reloadData()
     }
     
     func detect(at x: Int) -> Int? {

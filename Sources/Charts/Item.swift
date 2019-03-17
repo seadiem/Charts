@@ -29,6 +29,18 @@ public struct Item: Drawable {
         let rect = CGRect(origin: .zero, size: size)
         renderer.draw(color: color, in: rect)
         renderer.draw(text: name, at: CGPoint.zero)
+        if select == .selected {
+            
+            #if os(macOS)
+            let highlight = CGColor(red: 149/255, green: 98/2/255, blue: 57/2/255, alpha: 1.0)
+            #elseif os(iOS)
+            let highlight = UIColor(red: 149/255, green: 98/2/255, blue: 57/2/255, alpha: 1.0).cgColor
+            #endif
+            
+            renderer.setBlend(mode: .colorDodge)
+            renderer.draw(color: highlight, in: rect)
+        }
+        renderer.setBlend(mode: .normal)
     }
 }
 
