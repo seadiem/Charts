@@ -83,7 +83,7 @@ public struct Testes {
             }
         }
         
-        let graph = Graph(points: points, label: "y1")
+        let graph = Graph(points: points, label: "y1", color: nil)
         
         
         print(graph.count) // 10

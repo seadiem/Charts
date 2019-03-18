@@ -54,15 +54,12 @@ public extension CGContext {
         let lineText = NSMutableAttributedString(string: text)
         
         #if os(macOS)
-        let demofont = NSFont.init(name: "Georgia-Bold", size: 8)
         let color = CGColor.white
         #elseif os(iOS)
-        let demofont = UIFont.init(name: "Georgia-Bold", size: 8)
         let color = UIColor.white.cgColor
         #endif
         
-        
-        lineText.addAttributes([NSAttributedString.Key.font : demofont!,
+        lineText.addAttributes([NSAttributedString.Key.font : Fonts.h2,
                                 NSAttributedString.Key.foregroundColor: color],
                                range: NSMakeRange(0,lineText.length))
         let lineToDraw: CTLine = CTLineCreateWithAttributedString(lineText)

@@ -58,6 +58,12 @@ extension Point {
         
         static var formatter = makeFormatter()
         
+        #if os(macOS)
+        static var width: Int = 35
+        #elseif os(iOS)
+        static var width: Int = 45
+        #endif
+        
         let label: String
         
         #if os(macOS)
@@ -72,7 +78,7 @@ extension Point {
         }
         
         func draw(at point: CGPoint, in renderer: Renderer) {
-            let size = CGSize(width: 35, height: 10)
+            let size = CGSize(width: Label.width, height: 10)
             let rect = CGRect(origin: point, size: size)
             renderer.draw(color: back, in: rect)
             

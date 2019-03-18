@@ -1,4 +1,10 @@
+
+
+#if os(macOS)
 import CoreGraphics
+#elseif os(iOS)
+import UIKit
+#endif
 
 /// Для отрисовки в ячейки коллекции.
 /// Нужно обязательно задать set(size: CGSize)
@@ -11,14 +17,26 @@ public struct Item: Drawable {
     init(chart: Chart) {
         name = "Chart"
         select = chart.select
+        
+        #if os(macOS)
         color = CGColor(red: 149/255, green: 98/255, blue: 57/255, alpha: 1.0)
+        #elseif os(iOS)
+        color = UIColor(red: 149/255, green: 98/255, blue: 57/255, alpha: 1.0).cgColor
+        #endif
+        
         size = .zero
     }
     
     init(graph: Graph) {
-        name = "Graph"
+        name = graph.label
         select = graph.select
+        
+        #if os(macOS)
         color = CGColor(red: 149/255, green: 98/255, blue: 57/255, alpha: 1.0)
+        #elseif os(iOS)
+        color = UIColor(red: 149/255, green: 98/255, blue: 57/255, alpha: 1.0).cgColor
+        #endif
+        
         size = .zero
     }
     /// Задаём в методе дата соурса коллекции,

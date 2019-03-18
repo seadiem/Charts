@@ -8,8 +8,9 @@ struct Graph: RandomAccessCollection, Hashable, Selectable {
     private var hashtable: [Date: Point]
     let maxy: Int
     public var select: Select
+    public var color: CGColor
     
-    init(points: Set<Point>, label: String) {
+    init(points: Set<Point>, label: String, color: String?) {
         self.points = points
         self.label = label
         self.maxy = points.max { $0.value < $1.value }?.value ?? 100
@@ -18,6 +19,10 @@ struct Graph: RandomAccessCollection, Hashable, Selectable {
         for point in points { dict[point.maskDate] = point }
         self.hashtable = dict
         self.select = .selected
+        
+        guard let color = color else { self.color = CGColor.black; return }
+        self.color = Color().color(from: color)
+        
     }
     
     public var collectionItem: Item {
@@ -40,4 +45,3 @@ struct Graph: RandomAccessCollection, Hashable, Selectable {
     }
     
 }
-

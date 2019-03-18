@@ -15,8 +15,7 @@ public protocol Renderer {
     func setBlend(mode: CGBlendMode)
     
 //    func setColor(color: CGColor)
-//    func arc(center: CGPoint, from fromangel: Double, to toangel: Double, radius: Double)
-//    func fill()
+
 
 }
 
