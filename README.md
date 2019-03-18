@@ -1,4 +1,5 @@
-# Charts
+
+# Charts ![](http://funkyimg.com/i/2StmD.png)
 
 There are two Сharts apps for Telegram Contests 2019 (March) 
 (for iOS and macOS)
