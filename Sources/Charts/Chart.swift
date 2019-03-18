@@ -109,8 +109,10 @@ extension Chart: Drawable {
         
         #if os(macOS)
         let color = CGColor.black
+        let highlight = CGColor(red: 149/255, green: 98/2/255, blue: 57/2/255, alpha: 0.7)
         #elseif os(iOS)
         let color = UIColor.black.cgColor
+        let highlight = UIColor(red: 149/255, green: 98/2/255, blue: 57/2/255, alpha: 0.7).cgColor
         #endif
         
         renderer.setColor(color: color)
@@ -168,21 +170,25 @@ extension Chart: Drawable {
                 renderer.drawPath(points: [first, second])
                 index += 1
             }
-            renderer.setColor(color: CGColor.black)
-            renderer.setWidth(w: 1)
+            
             
             guard drawdates == true else { continue graphsloop }
+            
+            renderer.setColor(color: highlight)
+            renderer.setWidth(w: 0.5)
+            
             for tuple in timelabels {
                 let y: CGFloat = 0
                 let x: CGFloat = CGFloat(tuple.index) * kx
+                renderer.drawPath(points: [CGPoint(x: x, y: 0), CGPoint(x: x, y: screen.height)])
                 tuple.label.draw(at: CGPoint(x: x, y: y), in: renderer)
                 renderer.move(to: CGPoint(x: x, y: 0))
-                renderer.drawPath(points: [CGPoint(x: x, y: 0), CGPoint(x: x, y: screen.height)])
             }
             
             let height = screen.height
             let kh = Int(height / 5)
             
+
             for index in 1...5 {
                 renderer.move(to: CGPoint(x: 0, y: kh * index))
                 renderer.drawPath(points: [CGPoint(x: 0, y: kh * index), CGPoint(x: Int(screen.width), y: kh * index)])

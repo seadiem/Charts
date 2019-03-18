@@ -70,7 +70,7 @@ public struct Item: Drawable {
             renderer.draw(color: marker, in: markerrect)
         }
 
-        renderer.draw(text: name, at: CGPoint(x: 5, y: 2))
+        renderer.draw(text: name, at: CGPoint(x: 5, y: iSgraph ? 2 : 5))
     }
 }
 
