@@ -3,13 +3,19 @@
 There are two Сharts apps for Telegram Contests 2019 (March) 
 (for iOS and macOS)
 
-
-## Mac OS App
-### Installation
+--
+#### macOS App
+##### Installation
 - Required macOS 10.11 and higher
 - `$ cd Charts`
 - `$ swift run`
 
+--
+#### iOS App
+##### Instalation
+- Play button in Xcode
+
+--
 Alex Sedykh
 <https://github.com/seadiem>
 e-mail: se-a@mail.ru
