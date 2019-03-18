@@ -19,7 +19,7 @@ There are two Сharts apps for Telegram Contests 2019 (March)
 Alex Sedykh
 <https://github.com/seadiem>
 e-mail: se-a@mail.ru
-telegramm: @Cherviak2
+telegram: @Cherviak2
 
 Здравствуйте, в этой директории находятся два приложения для участия
 в конкурсe Telegram Contests 2019. Приложение для iOS собирается 
